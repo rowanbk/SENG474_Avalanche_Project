@@ -1,0 +1,23 @@
+{
+  "name": "scraper",
+  "version": "1.0.0",
+  "description": "Get avalanche danger rating from avalanche canada",
+  "main": "AvalancheCanada.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rowanbk/SENG474_Avalanche_Project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rowanbk/SENG474_Avalanche_Project/issues"
+  },
+  "homepage": "https://github.com/rowanbk/SENG474_Avalanche_Project#readme",
+  "dependencies": {
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5"
+  }
+}
