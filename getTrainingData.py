@@ -1,0 +1,47 @@
+from datetime import datetime, timedelta
+from os import path
+from stationScraper import scrapeStation
+
+def nDayHistory(n):
+    if not path.exists('3A25P_Archive.csv'):
+        scrapeStation('3A25P Squamish River Upper')
+
+    if not path.exists('3A22P_Archive.csv'):
+        scrapeStation('3A22P Nostetuko River')
+
+    archiveData = {}
+    with open('3A22P_Archive.csv', 'r') as s1:
+        with open('3A25P_Archive.csv', 'r') as s2:
+            _ = s1.readline()
+            _ = s2.readline()
+            l1 = s1.readline().strip('\n').split(',')
+            l2 = s2.readline().strip('\n').split(',')
+            while len(l1) > 1 and len(l2) > 1:
+                if l1[0] < l2[0]:
+                    l1 = s1.readline().strip('\n').split(',')
+                if l1[0] > l2[0]:
+                    l2 = s2.readline().strip('\n').split(',')
+                else:
+                    archiveData[l1[0]] = l1[1:] + l2[1:]
+                    l1 = s1.readline().strip('\n').split(',')
+                    l2 = s2.readline().strip('\n').split(',')
+    prev = None
+    outputRows = [[]]
+    for offset in range(0,n+1):
+        d = str(offset)
+        outputRows[0] += ['S1_total_'+d,'S1_delta_'+d,'S1_min_'+d, 'S1_max_'+d, 'S1_mean_'+d]
+        outputRows[0] += ['S2_total_'+d,'S2_delta_'+d,'S2_min_'+d, 'S2_max_'+d, 'S2_mean_'+d]
+    for key in sorted(archiveData.keys()):
+        curr = datetime.strptime(key, '%Y-%m-%d')
+        firstDay = datetime.strftime(curr - timedelta(days = n), '%Y-%m-%d')
+        if firstDay in archiveData:
+            outputRows.append([])
+            for offset in range(0,n+1):
+                outputRows[-1] += archiveData[datetime.strftime(curr - timedelta(days = offset), '%Y-%m-%d')]
+    with open('dataSet_N_'+str(n)+'.csv', 'w') as outfile:
+        for row in outputRows:
+            outfile.write(','.join(row)+'\n')
+
+
+if __name__ == '__main__':
+    nDayHistory(2)

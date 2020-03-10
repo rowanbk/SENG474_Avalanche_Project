@@ -1,7 +1,7 @@
 from datetime import datetime
 from statistics import mean
 
-def scrapeCSVs(station):
+def scrapeStation(station):
     outputTitles = ['Date','Total Snow','Daily Delta','Min','Max','Mean']
     outputRows = {}
     dateformat = '%Y-%m-%d %H:%M'
@@ -12,7 +12,7 @@ def scrapeCSVs(station):
         titles = line.split(',')
         column = titles.index(station)
         line = fullCSV.readline()
-        depth = 0
+        depth = -1
         while line:
             field = line.split(',')[column]
             currDS = line.split(',',1)[0]
@@ -23,7 +23,10 @@ def scrapeCSVs(station):
                     depth = float(field)
                 else:
                     depth = 0
-                outputRows[currDT.strftime('%Y-%m-%d')] = [str(depth), str(depth - prev)]
+                if prev < 0:
+                    outputRows[currDT.strftime('%Y-%m-%d')] = [str(depth), '0.0']
+                else:
+                    outputRows[currDT.strftime('%Y-%m-%d')] = [str(depth), str(depth - prev)]
             line = fullCSV.readline()
 
     with open('TA_Archive.csv', 'r') as hourlyCSV:
@@ -57,5 +60,5 @@ def scrapeCSVs(station):
             outCSV.write(day+','+','.join(outputRows[day])+'\n')
 
 if __name__ == '__main__':
-    scrapeCSVs('3A25P Squamish River Upper')
-    scrapeCSVs('3A22P Nostetuko River')
+    scrapeStation('3A25P Squamish River Upper')
+    scrapeStation('3A22P Nostetuko River')
