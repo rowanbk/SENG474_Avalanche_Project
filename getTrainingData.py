@@ -25,23 +25,32 @@ def nDayHistory(n):
                     archiveData[l1[0]] = l1[1:] + l2[1:]
                     l1 = s1.readline().strip('\n').split(',')
                     l2 = s2.readline().strip('\n').split(',')
+    dangerDict = {}
+    with open('danger_ratings.csv', 'r') as dr:
+        for line in dr:
+            day,rate = line.strip('\n').split(',',1)
+            dangerDict[day] = rate
     prev = None
     outputRows = [[]]
     for offset in range(0,n+1):
         d = str(offset)
         outputRows[0] += ['S1_total_'+d,'S1_delta_'+d,'S1_min_'+d, 'S1_max_'+d, 'S1_mean_'+d]
         outputRows[0] += ['S2_total_'+d,'S2_delta_'+d,'S2_min_'+d, 'S2_max_'+d, 'S2_mean_'+d]
+    outputRows[0] += ['Danger Rating']
     for key in sorted(archiveData.keys()):
         curr = datetime.strptime(key, '%Y-%m-%d')
         firstDay = datetime.strftime(curr - timedelta(days = n), '%Y-%m-%d')
-        if firstDay in archiveData:
+        if firstDay in archiveData and key in dangerDict:
             outputRows.append([])
             for offset in range(0,n+1):
                 outputRows[-1] += archiveData[datetime.strftime(curr - timedelta(days = offset), '%Y-%m-%d')]
+            outputRows[-1] += [dangerDict[key]]
     with open('dataSet_N_'+str(n)+'.csv', 'w') as outfile:
         for row in outputRows:
             outfile.write(','.join(row)+'\n')
 
 
 if __name__ == '__main__':
+    nDayHistory(0)
+    nDayHistory(1)
     nDayHistory(2)
