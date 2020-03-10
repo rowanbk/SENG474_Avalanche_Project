@@ -36,7 +36,30 @@ const getRatings = async (startDate, endDate, region) => {
   return data
 }
 
-getRatings(new Date('2013-01-01T08:00:00Z'), new Date('2018-12-31T08:00:00Z'), 'sea-to-sky').then(data => {
+const getRatingsSlow = async (startDate, endDate, region) => {
+  const results = []
+  let currentDate = new Date(startDate)
+  while(currentDate <= endDate) {
+    console.log(currentDate)
+    try {
+      const response = await request.get(`${BASE_URL}${currentDate.toISOString()}/${region}.json`)
+      const data = JSON.parse(response)
+      dateString = currentDate.toISOString()
+      results.push(`${dateString.substring(0, dateString.indexOf('T'))},${parseRating(data)}`)
+    } catch(error) {
+      // do something
+    }
+    currentDate = new Date(currentDate.setDate(currentDate.getDate() + 1))
+  }
+  return results
+}
+
+// getRatings(new Date('2013-01-01T08:00:00Z'), new Date('2018-12-31T08:00:00Z'), 'sea-to-sky').then(data => {
+//   const csv = data.join('\n')
+//   fs.writeFileSync('danger_ratings.csv', csv)
+// })
+
+getRatingsSlow(new Date('2013-01-01T08:00:00Z'), new Date('2018-12-31T08:00:00Z'), 'sea-to-sky').then(data => {
   const csv = data.join('\n')
   fs.writeFileSync('danger_ratings.csv', csv)
 })
