@@ -28,7 +28,8 @@ const getRatings = async (startDate, endDate, region) => {
 
   const data = results.map(result => {
     const temp = JSON.parse(result)
-    return `${new Date(temp.dateIssued).toISOString()},${parseRating(temp)}`
+    dateString = new Date(temp.dateIssued)
+    return `${dateString.substring(0, dateString.indexOf('T'))},${parseRating(temp)}`
   })
 
   data.sort((a, b) => new Date(b.substring(0, b.indexOf(','))) < new Date(a.substring(0, b.indexOf(','))))
