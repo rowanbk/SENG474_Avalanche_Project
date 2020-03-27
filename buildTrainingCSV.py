@@ -12,8 +12,8 @@ def nDayHistory(n):
         scrapeStation('3A22P Nostetuko River')
 
     archiveData = {}
-    with open('snowFallData/3A22P_Archive.csv', 'r') as s1:
-        with open('snowFallData/3A25P_Archive.csv', 'r') as s2:
+    with open('3A22P_Archive.csv', 'r') as s1:
+        with open('3A25P_Archive.csv', 'r') as s2:
             _ = s1.readline()
             _ = s2.readline()
             l1 = s1.readline().strip('\n').split(',')
