@@ -47,8 +47,9 @@ def nDayHistory(n):
             for offset in range(0,n+1):
                 outputRows[-1] += archiveData[datetime.strftime(curr - timedelta(days = offset), '%Y-%m-%d')]
             outputRows[-1] += [dangerDict[key]]
-    validation_rows = sample(outputRows, ceil(len(outputRows)*0.05))
+    validation_rows = sample(outputRows[1:], ceil(len(outputRows[1:])*0.05))
     with open('valSet_N_'+str(n)+'.csv', 'w') as valfile:
+        valfile.write(','.join(outputRows[0])+'\n')
         with open('dataSet_N_'+str(n)+'.csv', 'w') as outfile:
             for row in outputRows:
                 if row in validation_rows:
