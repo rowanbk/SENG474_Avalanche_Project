@@ -12,8 +12,8 @@ def nDayHistory(n):
         scrapeStation('3A22P Nostetuko River')
 
     archiveData = {}
-    with open('3A22P_Archive.csv', 'r') as s1:
-        with open('3A25P_Archive.csv', 'r') as s2:
+    with open('snowFallData/3A22P_Archive.csv', 'r') as s1:
+        with open('snowFallData/3A25P_Archive.csv', 'r') as s2:
             _ = s1.readline()
             _ = s2.readline()
             l1 = s1.readline().strip('\n').split(',')
@@ -28,7 +28,7 @@ def nDayHistory(n):
                     l1 = s1.readline().strip('\n').split(',')
                     l2 = s2.readline().strip('\n').split(',')
     dangerDict = {}
-    with open('danger_ratings.csv', 'r') as dr:
+    with open('snowFallData/danger_ratings.csv', 'r') as dr:
         for line in dr:
             day,rate = line.strip('\n').split(',',1)
             dangerDict[day] = rate
@@ -48,9 +48,9 @@ def nDayHistory(n):
                 outputRows[-1] += archiveData[datetime.strftime(curr - timedelta(days = offset), '%Y-%m-%d')]
             outputRows[-1] += [dangerDict[key]]
     validation_rows = sample(outputRows[1:], ceil(len(outputRows[1:])*0.05))
-    with open('valSet_N_'+str(n)+'.csv', 'w') as valfile:
+    with open('snowFallData/valSet_N_'+str(n)+'.csv', 'w') as valfile:
         valfile.write(','.join(outputRows[0])+'\n')
-        with open('dataSet_N_'+str(n)+'.csv', 'w') as outfile:
+        with open('snowFallData/dataSet_N_'+str(n)+'.csv', 'w') as outfile:
             for row in outputRows:
                 if row in validation_rows:
                     valfile.write(','.join(row)+'\n')
