@@ -36,6 +36,7 @@ def nDayHistory(n):
         for line in dr:
             day,rate = line.strip('\n').split(',',1)
             dangerDict[day] = rate
+    dangerDict = { key:value for (key,value) in dangerDict.items() if value != '-1' }
     prev = None
     outputRows = [[]]
     for offset in range(0,n+1):
