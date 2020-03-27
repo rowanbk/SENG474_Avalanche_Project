@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta
 from os import path
+from random import sample
+from math import ceil
 from stationScraper import scrapeStation
 
 def nDayHistory(n):
@@ -45,12 +47,17 @@ def nDayHistory(n):
             for offset in range(0,n+1):
                 outputRows[-1] += archiveData[datetime.strftime(curr - timedelta(days = offset), '%Y-%m-%d')]
             outputRows[-1] += [dangerDict[key]]
-    with open('dataSet_N_'+str(n)+'.csv', 'w') as outfile:
-        for row in outputRows:
-            outfile.write(','.join(row)+'\n')
-
+    validation_rows = sample(outputRows, ceil(len(outputRows)*0.05))
+    with open('valSet_N_'+str(n)+'.csv', 'w') as valfile:
+        with open('dataSet_N_'+str(n)+'.csv', 'w') as outfile:
+            for row in outputRows:
+                if row in validation_rows:
+                    valfile.write(','.join(row)+'\n')
+                else:
+                    outfile.write(','.join(row)+'\n')
 
 if __name__ == '__main__':
     nDayHistory(0)
     nDayHistory(1)
     nDayHistory(2)
+    nDayHistory(3)
