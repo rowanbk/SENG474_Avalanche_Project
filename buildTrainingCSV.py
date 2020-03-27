@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from os import path
 from random import sample
 from math import ceil
+from normArchiveTemps import normSave
 from stationScraper import scrapeStation
 
 def nDayHistory(n):
@@ -11,9 +12,12 @@ def nDayHistory(n):
     if not path.exists('3A22P_Archive.csv'):
         scrapeStation('3A22P Nostetuko River')
 
+    if not (path.exists('3A25P_Archive_normed.csv') and path.exists('3A22P_Archive_normed.csv')):
+        normSave()
+
     archiveData = {}
-    with open('3A22P_Archive.csv', 'r') as s1:
-        with open('3A25P_Archive.csv', 'r') as s2:
+    with open('3A22P_Archive_normed.csv', 'r') as s1:
+        with open('3A25P_Archive_normed.csv', 'r') as s2:
             _ = s1.readline()
             _ = s2.readline()
             l1 = s1.readline().strip('\n').split(',')
@@ -28,7 +32,7 @@ def nDayHistory(n):
                     l1 = s1.readline().strip('\n').split(',')
                     l2 = s2.readline().strip('\n').split(',')
     dangerDict = {}
-    with open('snowFallData/danger_ratings.csv', 'r') as dr:
+    with open('danger_ratings.csv', 'r') as dr:
         for line in dr:
             day,rate = line.strip('\n').split(',',1)
             dangerDict[day] = rate
